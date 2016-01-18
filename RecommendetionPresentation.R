@@ -6,6 +6,8 @@ requirePkg("ggplot2")
 requirePkg("recommenderlab")
 requirePkg("countrycode")
 
+
+# all the packages called out. 
 library("data.table")
 library("ggplot2")
 library("recommenderlab")
@@ -100,3 +102,4 @@ user1_recommendetions <- recc_predicted@items[[1]]
 # let's convert item_lables into item ids
 items_labels_for_user_1 <- recc_predicted@itemLabels[user1_recommendetions]
 items_labels_for_user_1
+
