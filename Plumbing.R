@@ -6,7 +6,7 @@ library("sets")
 
 # we use data table to query only users and items
 getUsersAndItems <- function(tbl){
-  all_data <- data.table(table[, 1:2])
+  all_data <- data.table(table[, 1:2]) # snap only first two columns and filter for only users and items
   setnames(all_data, 1:2, c("Type", "Id"))
   all_data[Type %in% c("C", "V")]
   
@@ -44,7 +44,9 @@ convertIntoBinaryMatrix <- function(users_and_items_wide){
   #
   # Convert to binary matrix by replacing all 'NA's by 0
   matrix_wide[is.na(matrix_wide)] <- 0
-  # Convert to recommenderlab's binaryRatingMatrix. TODO: describe binaryRatingMatrix
+  # Convert to recommenderlab's binaryRatingMatrix. 
+  # A matrix to represent binary rating data. 1 codes for a positive rating while 0 codes for
+  # no or negative rating.
   assoc_matrix <- as(matrix_wide, "binaryRatingMatrix")
   assoc_matrix
 }

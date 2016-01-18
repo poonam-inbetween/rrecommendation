@@ -1,11 +1,11 @@
 source("Util.r")
 source("Plumbing.r")
 
-requirePkg("data.table")
+requirePkg("data.table") # Go to Util.R
 requirePkg("ggplot2")
 requirePkg("recommenderlab")
 requirePkg("countrycode")
-
+requirePkg("sets")
 
 # all the packages called out. 
 library("data.table")
@@ -14,14 +14,12 @@ library("recommenderlab")
 library("countrycode")
 library("sets")
 
+# reading the input table
 table <- read.csv("demo_data.csv", header = FALSE)
 head(table)
-help("data.table")
-# to filter the data on one column value
+help("data.table") # this will render the documenttaion on data.table package
 
-# snap only first two columns and filter for only users and items
-
-users_and_items = getUsersAndItems(table);
+users_and_items = getUsersAndItems(table);# Go to Plumbing.R
 
 # Add a new column which contains integers started from one and increments for every new user
 #
@@ -53,7 +51,7 @@ users_and_items_wide <- reshape(data = users_and_items_long, # our data
 head(users_and_items_wide[, 1:5, with = FALSE])
 
 # create associative matrix from above table
-assoc_matrix <- convertIntoBinaryMatrix(users_and_items_wide)
+assoc_matrix <- convertIntoBinaryMatrix(users_and_items_wide)# Go to plumbing.R
 assoc_matrix
 
 #let's visualise our matrix
@@ -68,17 +66,19 @@ qplot(n_users) + stat_bin(binwidth = 100, bins = 30) + ggtitle("Distribution of 
 # ignoring outliers
 qplot(n_users[n_users < 100]) + stat_bin(binwidth = 10) + ggtitle("Distribution of the number of users")
 
-# take users who has purchased at least 7 items
-ratings_matrix <- assoc_matrix[, colCounts(assoc_matrix) >= 7]
 
 # users who did not purchase anything
 sum(rowCounts(ratings_matrix) == 0)
 
-# TODO: figure out why I did this?
+# take users who has purchased at least 7 items, Threshhold = 7
+ratings_matrix <- assoc_matrix[, colCounts(assoc_matrix) >= 7]
+
+
+# Distribution of users without outliers
 n_users1 <- colCounts(ratings_matrix)
 qplot(n_users1[n_users1 < 100], color="red") + stat_bin(binwidth = 10) +  ggtitle("Distribution of the number of users")
 
-# table_items[category %in% c("region")]
+
 
 p <- createModel(ratings_matrix)
 recc_model <- p$recc_model
