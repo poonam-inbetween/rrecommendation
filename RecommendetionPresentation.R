@@ -1,11 +1,11 @@
 source("Util.r")
 source("Plumbing.r")
 
-requirePkg("data.table") # Go to Util.R
-requirePkg("ggplot2")
-requirePkg("recommenderlab")
-requirePkg("countrycode")
-requirePkg("sets")
+requirePkg("data.table")      # Go to Util.R
+requirePkg("ggplot2")         # Go to Util.R
+requirePkg("recommenderlab")  # Go to Util.R
+requirePkg("countrycode")     # Go to Util.R
+requirePkg("sets")            # Go to Util.R
 
 # all the packages called out. 
 library("data.table")
@@ -50,9 +50,12 @@ users_and_items_wide <- reshape(data = users_and_items_long, # our data
 # let's see only first five columns aka items
 head(users_and_items_wide[, 1:5, with = FALSE])
 
+
+
 # create associative matrix from above table
 assoc_matrix <- convertIntoBinaryMatrix(users_and_items_wide)# Go to plumbing.R
 assoc_matrix
+
 
 #let's visualise our matrix
 image(assoc_matrix[1:50, 1:50], main = "Binary rating matrix")
@@ -67,11 +70,11 @@ qplot(n_users) + stat_bin(binwidth = 100, bins = 30) + ggtitle("Distribution of 
 qplot(n_users[n_users < 100]) + stat_bin(binwidth = 10) + ggtitle("Distribution of the number of users")
 
 
-# users who did not purchase anything
-sum(rowCounts(ratings_matrix) == 0)
-
 # take users who has purchased at least 7 items, Threshhold = 7
 ratings_matrix <- assoc_matrix[, colCounts(assoc_matrix) >= 7]
+
+# users who did not purchase anything
+sum(rowCounts(ratings_matrix) == 0)
 
 
 # Distribution of users without outliers
@@ -80,7 +83,7 @@ qplot(n_users1[n_users1 < 100], color="red") + stat_bin(binwidth = 10) +  ggtitl
 
 
 
-p <- createModel(ratings_matrix)
+p <- createModel(ratings_matrix) # Go to Plumbing.R
 recc_model <- p$recc_model
 recc_data_test <- p$recc_data_test
 
@@ -96,8 +99,9 @@ recc_predicted <- predict(object = recc_model, newdata = recc_data_test, n = 5)
 #item labels of our result
 head(recc_predicted@itemLabels)
 
-#lets exxtract all predicated items for first user
+#lets extract all predicated items for first user, this will give you the internal indexes 
 user1_recommendetions <- recc_predicted@items[[1]]
+user1_recommendetions
 
 # let's convert item_lables into item ids
 items_labels_for_user_1 <- recc_predicted@itemLabels[user1_recommendetions]
